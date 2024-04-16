@@ -50,6 +50,7 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(659, 435);
             this.panel2.TabIndex = 1;
+            this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
             // label1
             // 
@@ -81,6 +82,7 @@
             this.button1.TabIndex = 4;
             this.button1.Text = "BACK";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Inbox
             // 

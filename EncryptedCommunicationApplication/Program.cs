@@ -17,6 +17,7 @@ namespace EncryptedCommunicationApplication
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Start());
+            // When application is executed, the start form/window is displayed
         }
     }
 }

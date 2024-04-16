@@ -16,5 +16,32 @@ namespace EncryptedCommunicationApplication
         {
             InitializeComponent();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        // If login button was clicked, execute below indented code
+        {
+            Login login = new Login();
+            this.Hide();
+            // Close current window
+            login.Show();
+            // Display login window
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        // If register button was clicked, execute below indented code
+        {
+            Register register = new Register();
+            this.Hide();
+            // Close current window
+            register.Show();
+            // Display register window
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        // If exit button was clicked, execute below indented code
+        {
+            Application.Exit();
+            // Exit application
+        }
     }
 }

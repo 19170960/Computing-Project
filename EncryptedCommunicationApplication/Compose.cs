@@ -16,5 +16,19 @@ namespace EncryptedCommunicationApplication
         {
             InitializeComponent();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Email email = new Email();
+            this.Hide();
+            // Close current window
+            email.Show();
+            // Display email window
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

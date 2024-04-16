@@ -16,5 +16,20 @@ namespace EncryptedCommunicationApplication
         {
             InitializeComponent();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        // If back button was clicked, execute below indented code
+        {
+            Email email = new Email();
+            this.Hide();
+            // Close current window
+            email.Show();
+            // Display email window
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

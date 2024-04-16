@@ -21,5 +21,15 @@ namespace EncryptedCommunicationApplication
         {
 
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        // If back button was clicked, execute below indented code
+        {
+            Start start = new Start();
+            this.Hide();
+            // Close current window
+            start.Show();
+            // Display start window
+        }
     }
 }
