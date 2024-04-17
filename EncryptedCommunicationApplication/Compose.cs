@@ -11,6 +11,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Security.Cryptography;
+
 
 namespace EncryptedCommunicationApplication
 {
@@ -40,11 +42,32 @@ namespace EncryptedCommunicationApplication
             MailMessage emailSend = new MailMessage();
             // Create new email (that can be configured.)
 
-            emailSend.To.Add(new MailAddress(textBox1.Text));
+            RSACryptoServiceProvider encryptionRSA = new RSACryptoServiceProvider(4096);
+            // Configure RSA encryption algorithm to use 4096 bytes of data
+
+            string textCipherSubject = Convert.ToBase64String(encryptionRSA.Encrypt(Encoding.UTF8.GetBytes(textBox2.Text), false));
+            // Encrypt plain text subject
+
+            string textDecryptedSubject = Encoding.UTF8.GetString(encryptionRSA.Decrypt(Convert.FromBase64String(textCipherSubject), false));
+            // Decrypt cipher text subject
+
+            string textCipherRecipient = Convert.ToBase64String(encryptionRSA.Encrypt(Encoding.UTF8.GetBytes(textBox1.Text), false));
+            // Encrypt plain text recipient
+
+            string textDecryptedRecipient = Encoding.UTF8.GetString(encryptionRSA.Decrypt(Convert.FromBase64String(textCipherRecipient), false));
+            // Decrypt cipher text recipient
+
+            string textCipherBody = Convert.ToBase64String(encryptionRSA.Encrypt(Encoding.UTF8.GetBytes(textBox3.Text), false));
+            // Encrypt plain text email body
+
+            string textDecryptedBody = Encoding.UTF8.GetString(encryptionRSA.Decrypt(Convert.FromBase64String(textCipherBody), false));
+            // Decrypt cipher text body
+
+            emailSend.To.Add(new MailAddress(textDecryptedRecipient));
             // Add this input, as the recipient data
-            emailSend.Subject = textBox2.Text;
+            emailSend.Subject = textDecryptedSubject;
             // Add this input, as subject data
-            emailSend.Body = textBox3.Text;
+            emailSend.Body = textDecryptedBody;
             // Add this input, as body data.
             SmtpClient connectionSMTP = new SmtpClient("smtp.gmail.com", 587);
             // Configure SMTP client using a secure connection (supported by GMAIL.)
