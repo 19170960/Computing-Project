@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO.Pipes;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -10,6 +11,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
+using System.IO;
+using System.Threading;
+using System.Security.Cryptography;
 
 namespace EncryptedCommunicationApplication
 {
@@ -44,6 +48,19 @@ namespace EncryptedCommunicationApplication
         {
 
         }
+        private void threadSMSReceive()
+        {
+            NamedPipeServerStream pipeReceive = new NamedPipeServerStream("pipeReceive", PipeDirection.InOut);
+           
+            pipeReceive.WaitForConnection();
+
+            StreamReader SMSread = new StreamReader(pipeReceive);
+
+            richTextBox1.AppendText(textBox2.Text + ": " + SMSread.ReadLine() + "\n");
+
+            pipeReceive.Close();
+
+        }
 
         private void button1_Click(object sender, EventArgs e)
         // When button is clicked, execute below indented code
@@ -63,6 +80,9 @@ namespace EncryptedCommunicationApplication
             // Transmit an SMS using a mobile phone number, and decrypted body (inputted using the provided text-boxes.) 
             richTextBox1.AppendText("Me: " + textDecrypted + "\n");
             // Display the transmitted SMS (in plain-text) within the provided text-box.
+            Thread SMSreceive = new Thread(new ThreadStart(threadSMSReceive));
+            SMSreceive.Start();
+            // Execute thread (to receive SMS) in order to prevent the application from freezing (while waiting for received SMS.)
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -74,5 +94,6 @@ namespace EncryptedCommunicationApplication
         {
 
         }
+
     }
 }
