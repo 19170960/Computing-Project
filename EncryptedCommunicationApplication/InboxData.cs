@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -23,12 +24,28 @@ namespace EncryptedCommunicationApplication
             string emailBodyData = emailBody;
             // Set emailBodyData string as input
 
-            emailSenderDisplay(emailSenderData);
+            RSACryptoServiceProvider encryptionRSA = new RSACryptoServiceProvider(4096);
+            // Configure RSA encryption algorithm
+
+            string textCipherSender = Convert.ToBase64String(encryptionRSA.Encrypt(Encoding.UTF8.GetBytes(emailSenderData), false));
+            // Encrypt plain-text sender
+
+            string textDecryptedSender = Encoding.UTF8.GetString(encryptionRSA.Decrypt(Convert.FromBase64String(textCipherSender), false));
+            // Decrypt cipher sender data
+
+            string textCipherSubject = Convert.ToBase64String(encryptionRSA.Encrypt(Encoding.UTF8.GetBytes(emailSubjectData), false));
+            // Encrypt subject data
+
+            string textDecryptedSubject = Encoding.UTF8.GetString(encryptionRSA.Decrypt(Convert.FromBase64String(textCipherSubject), false));
+            // Decrypt subject cipher data
+
+            emailSenderDisplay(textDecryptedSender);
             // Display sender input
-            emailSubjectDisplay(emailSubjectData);
+            emailSubjectDisplay(textDecryptedSubject);
             // Display subject input
-            emailBodyDisplay(emailBodyData);
+            emailBodyDisplay(emailBody);
             // Display body input
+            // Body could not be encrypted due to its length
         }
 
         private void button1_Click(object sender, EventArgs e)

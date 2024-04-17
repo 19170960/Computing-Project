@@ -13,6 +13,7 @@ using MailKit.Search;
 using MailKit.Security;
 using MimeKit;
 using Org.BouncyCastle.Crypto.Macs;
+using System.Security.Cryptography;
 
 namespace EncryptedCommunicationApplication
 {
@@ -75,7 +76,17 @@ namespace EncryptedCommunicationApplication
                 // Create new link label
                 linkLabelEmailSubject.Width = 150;
                 // Configure link label width
-                linkLabelEmailSubject.Text = emailSubject;
+
+                RSACryptoServiceProvider encryptionRSA = new RSACryptoServiceProvider(4096);
+                // Configure RSA encryption algorithm to use 4096 bytes of data
+
+                string textCipherSubject = Convert.ToBase64String(encryptionRSA.Encrypt(Encoding.UTF8.GetBytes(emailSubject), false));
+                // Encrypt plain-text subject
+
+                string textDecryptedSubject = Encoding.UTF8.GetString(encryptionRSA.Decrypt(Convert.FromBase64String(textCipherSubject), false));
+                // Decrypt cipher subject data
+
+                linkLabelEmailSubject.Text = textDecryptedSubject;
                 // Configure link label text as email subject
                 flowLayoutPanel2.Controls.Add(linkLabelEmailSubject);
                 // Add link label to the panel (within the displayed GUI.
@@ -95,9 +106,16 @@ namespace EncryptedCommunicationApplication
                 // Set the email body value as the current email body
 
                 System.Windows.Forms.Label labelEmailSender = new System.Windows.Forms.Label();
-                // Create a new label
-                labelEmailSender.Text = listEmailSender[i];
-                // Display the email sender/author
+
+                string textCipherSender = Convert.ToBase64String(encryptionRSA.Encrypt(Encoding.UTF8.GetBytes(emailSender), false));
+                // Encrypt plain-text sender
+
+                string textDecryptedSender = Encoding.UTF8.GetString(encryptionRSA.Decrypt(Convert.FromBase64String(textCipherSender), false));
+                // Decrypt cipher sender data
+
+                labelEmailSender.Text = textDecryptedSender;
+                // Configure label (set to sender/author name)
+
                 flowLayoutPanel1.Controls.Add(labelEmailSender);
                 // Add this label to the panel (displayed by the GUI.)
 
