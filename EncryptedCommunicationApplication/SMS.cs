@@ -13,7 +13,6 @@ using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using System.IO;
 using System.Threading;
-using System.Security.Cryptography;
 
 namespace EncryptedCommunicationApplication
 {
@@ -51,15 +50,28 @@ namespace EncryptedCommunicationApplication
         private void threadSMSReceive()
         {
             NamedPipeServerStream pipeReceive = new NamedPipeServerStream("pipeReceive", PipeDirection.InOut);
+            // Configure receive pipe
            
             pipeReceive.WaitForConnection();
+            // Wait for pipe to connect
 
             StreamReader SMSread = new StreamReader(pipeReceive);
+            // Read received SMS data
 
-            richTextBox1.AppendText(textBox2.Text + ": " + SMSread.ReadLine() + "\n");
+            RSACryptoServiceProvider encryptionRSA = new RSACryptoServiceProvider(4096);
+            // Configure RSA encryption algorithm to use 4096 bytes of data
 
+            string textCipher = Convert.ToBase64String(encryptionRSA.Encrypt(Encoding.UTF8.GetBytes(SMSread.ReadLine()), false));
+            // Encrypt plain text message body
+
+            string textDecrypted = Encoding.UTF8.GetString(encryptionRSA.Decrypt(Convert.FromBase64String(textCipher), false));
+            // Decrypt plain text message body
+
+            richTextBox1.AppendText(textBox2.Text + ": " + textDecrypted + "\n");
+            // Display received SMS on text-box (with sender information)
+            
             pipeReceive.Close();
-
+            // Close the pipe, as it is no longer in use
         }
 
         private void button1_Click(object sender, EventArgs e)
