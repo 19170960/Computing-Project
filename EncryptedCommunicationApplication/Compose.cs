@@ -75,9 +75,9 @@ namespace EncryptedCommunicationApplication
             // Enable SSL, for security
             connectionSMTP.UseDefaultCredentials = false;
             // Configured credentials have been provided
-            emailSend.From = new MailAddress("theeldercircle@gmail.com");
+            emailSend.From = new MailAddress("frido7310@gmail.com");
             // Configured email address (to transmit emails from.)
-            connectionSMTP.Credentials = new NetworkCredential("theeldercircle@gmail.com", "mwmn enlq vnha iauy");
+            connectionSMTP.Credentials = new NetworkCredential("frido7310@gmail.com", "zwzp gefg ijea aanj");
             // Configured credentials for this account.
 
             connectionSMTP.Send(emailSend);
